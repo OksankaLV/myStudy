@@ -1,0 +1,311 @@
+// 1.1 Data types & operators. Objects and functions.
+
+// an array to record all valid ID
+const allProductId = [];
+
+// minimum and maximum values, for setting the product ID
+const min = 0; 
+const max = 1000;
+function Product(Id, name, description) { 
+    
+    //add a unique ID, unless otherwise provided by the condition.
+    if (Id !== undefined && !allProductId.includes(Id)) {
+        allProductId.push(Id);
+        this.Id = Id;
+    } else {
+        while (Id === undefined || !allProductId.includes(Id)) {
+            Id = Math.floor(Math.random() * (max - min) + min);
+            if (!allProductId.includes(Id) || allProductId.length === 0) {
+                allProductId.push(Id);
+                this.Id = Id;
+                console.log("this iD is not unique and new ID = " + Id);
+            }
+        }
+    }
+   
+    this.name = name;
+    this.description = description;
+    this.price;
+    this.brand;
+    this.sizes = ["XS", "S", "M", "L", "XL", "XXL"];
+    this.activeSize;
+    this.quantity;
+    this.date = new Date();
+    this.reviews = [] /*Array of odject tabl2 */;
+    this.images = [] /*Array of String*/;
+
+    // getter and setter functions for all product properties
+    this.setId = function (Id) {
+        if (Id !== undefined && !allProductId.includes(Id)) {
+            /* if the proposed ID is unique, then we delete the old one, 
+            and add the new one to the array and replace the product property*/
+        allProductId.splice(allProductId.indexOf(this.Id), 1, Id); 
+        this.Id = Id;
+        } else {
+                console.log("Sorry, but this iD is not unique or undefined. Change the ID and try again")
+    }
+    }
+       
+    this.getId = function() { return this.Id; }  //or this.getId = () => this.ID;
+    this.setName = function(name) { this.name = name; }
+    this.getName = function() { return this.name; }
+    this.setDescription = function(description) { this.description = description; }
+    this.getDescription = function() { return this.description; }
+    this.setPrice = function(price) { this.price = price; }
+    this.getPrice = function() { return this.price; }
+    this.setBrand = function(brand) { this.brand = brand; }
+    this.getBrand = function() { return this.brand; }
+    this.setSizes = function(sizes) { this.sizes = sizes; }
+    this.getSizes = function() { return this.sizes; }
+    this.setActiveSize = function(activeSize) { this.activeSize = activeSize; }
+    this.getActiveSize = function() { return this.activeSize; }
+    this.setGuantity = function(quantity) { this.quantity = quantity; }
+    this.getGuantity = function() { return this.quantity; }
+    this.setDate = function (date) { this.date = new Date(date); }
+    /**
+     *  Date return result: "YY-MM-DD HH:MM:SS"
+     */
+    this.getDate = function () {
+        return this.date.getFullYear() + "-" + this.date.getMonth() + "-" + this.date.getDate() + " " +
+        this.date.getHours() + ":" + this.date.getMinutes() + ":" + this.date.getSeconds();
+    }  
+
+    /**
+     * 
+     * @param {*} Id - unique id of the reviews
+     * @param {*} author - author of the reviews (String)
+     * @param {*} date - String 
+     * @param {*} comment - String
+     * @param {*} rating - array rating with indicator [servise, price, value, quality]
+     */
+    this.setReviews = function(Id, author, date, comment, rating) { this.reviews.push(new Review(Id, author, date, comment, rating))}; 
+    this.getReviews = function() { return this.reviews; }
+    this.setImages = function ([image]) { this.image = [image]; }
+    this.getImages = function() { return this.images; }
+
+    /**
+     * returns an array of responses by the given key
+     * @param {*} id - given Id for search
+     * @returns array with object by the given Id
+     */
+    this.getReviewById = function (id) {
+        let result = [];
+        this.reviews.forEach((element,index) => {
+            if (element.Id === id || id === undefined) { result.push(this.reviews[index]) }
+        });
+        return result;
+    }
+    /**
+     * returns the picture according to the specified parameter, if there was no parameter,
+       then returns the first picture from the array
+     * @param {*} index for search
+     * @returns image
+     */
+    this.getImage = function (index) {
+        return (index === undefined) ? this.images[0] : this.images[index];
+    }
+    /**
+     * Adds a new value to the sizes array
+     * @param {*} parametr - new size
+     */
+    this.addSize = function (parametr) { this.sizes.push(parametr); }
+    /**
+     * Deletes the value from the array by the specified key
+     * @param {*} parametr - size to be removed (String)
+     */
+    this.deleteSize = function(parametr) {
+        let index = this.sizes.indexOf(parametr);
+        if (index !== -1) { this.sizes.splice(index,1) };  
+    }
+   
+    this.addReview = function (Id, author, date, comment, rating) {
+        this.reviews.push(new Review(Id, author, date, comment, rating));
+    }
+    /**
+     * deletes the first review on the given id
+     * @param {*} Id - review id for delete (String)
+     */
+    this.deleteReview = function (Id) { 
+        this.reviews.forEach((element, index) => {
+            if (element.Id === Id) {
+                this.reviews.splice(index, 1);
+            }
+        })
+    }
+    this.getAverageRating = function () {
+        if (this.reviews.length === 0) { console.log("there are no comments"); return 0; }
+        result = 0;
+        this.reviews.forEach((element) => {
+            result += element.getRating;
+        }) 
+        return result / this.reviews.length;
+    }
+
+
+}
+
+/**
+ * builder for creating feedback.
+ * @param {*} Id unique code String
+ * @param {*} author String
+ * @param {*} date String
+ * @param {*} comment String
+ * @param {*} rating array rating with indicator [servise, price, value, quality]
+ */
+function Review(Id, author, date, comment, rating) {
+    this.Id = Id;
+    this.author = author;
+    this.date = new Date(date);
+    this.comment = comment;
+    this.rating = { 'service': rating[0], 'price': rating[1], 'value': rating[2], 'quality': rating[3] };
+    // flattery records the average rating by review
+    for (let i = 0; i < 4; i++) {if (rating[i] === NaN) { rating[i] == 0; }}
+    this.getRating = (rating[0] + rating[1] + rating[2] + rating[3]) / 4 ;
+}
+/**
+ * creates an array of objects that contain the text 
+ * search in the name or description of the products object
+ * @param {*} products - array of "Product" objects
+ * @param {*} search - text to search for
+ */
+searchProducts = function (products, search) { 
+    let result = [];
+    products.forEach((element) => {
+        let str = "";
+        str = element.name + " " + element.description;
+        str = str.toLowerCase();
+        if (str.indexOf(search.toLowerCase()) !== -1 ) {
+            result.push(element);
+        }
+    })
+    return result;
+    
+}
+/**
+ * sorting array objects by parameter ID, name or price
+ * @param {*} products - array of "Product" objects
+ * @param {*} sortRule - attribute to sort by: ID, name or value
+*/
+sortProducts = function (products, sortRule) { 
+    switch (sortRule.toLowerCase()) {
+        case "name":
+            return products.sort(function (a, b) {
+                if (a.name > b.name) { return 1 };
+                if (a.name < b.name) { return -1 };
+                return 0;
+            })
+            break;
+        case "id":
+            return products.sort(function (a, b) {
+                if (a.Id > b.Id) { return 1 };
+                if (a.Id < b.Id) { return -1 };
+                return 0;
+            })
+            break;
+        case "price":
+            return products.sort(function (a, b) {
+                if (a.price > b.price) { return 1 };
+                if (a.price < b.price) { return -1 };
+                return 0;
+            })
+            break;
+        default:
+            console.log("the sortRule parameter is not specified correctly")
+            return products;
+            break;
+   }
+}
+
+
+/* Test*//*
+const prodOne = new Product();
+console.log(prodOne.getId()); 
+prodOne.setId(2);
+console.log(`all id in product:  + ${allProductId}`);
+console.log(`prodOne getId:  + ${prodOne.getId()}`);
+
+console.log(prodOne.getName(prodOne.setName("Dress")));
+prodOne.setId(2); //this iD is not unique or undefined. Change the ID and try again
+console.log(prodOne.getDate());
+console.log("set new Date");
+prodOne.setDate("2022,11,18");
+console.log(prodOne.getDate());
+console.log(`all id in product:  + ${allProductId}`);
+
+const prodThree = new Product(3);
+prodOne.setId();
+prodOne.setId(3);
+console.log(prodOne.getId())
+console.log(`all id in product:  + ${allProductId}`);
+prodOne.setId(1);
+console.log(`all id in product:  + ${allProductId}`);
+
+
+prodOne.setReviews("2", "Author", "2022", "comment2.1",  [5, 4 , 5 , 5])
+console.log(prodOne.getReviews());
+prodOne.getReviewById("2").forEach((element) => { console.log(element); })
+
+prodOne.setReviews("0", "Author2", "2023", "comment01", "5")
+console.log(prodOne.getReviews());
+console.log("reviews with id = 0:"+ prodOne.getReviewById("0"));
+prodOne.getReviewById("2").forEach((element) => { console.log(element); })
+
+prodOne.addReview("1", "author", "2022,10,15", "comment 1.1", [5, 2, 0, 5] );
+prodOne.addReview("1", "author2", "2023-10-24 22:15", "comment 1.2", [2]);
+console.log("reviews with id 1:")
+prodOne.getReviewById("1").forEach((element) => { console.log(element); })
+prodOne.deleteReview("1");
+console.log("delete one element")
+prodOne.getReviewById("1").forEach((element) => { console.log(element); })
+
+let one = prodOne.reviews[0];
+console.log(one.Id);
+console.log(one.author);
+console.log(one.comment);
+console.log(one.rating);
+console.log(one.getRating);
+console.log(one.rating['service']);
+console.log(one.rating['value']);
+console.log(prodOne.getAverageRating());
+console.log(prodThree.getAverageRating());
+console.log(prodThree);
+console.log(prodOne);
+
+/*
+//Test rating
+let prodForRating = new Product(11);
+prodForRating.addReview("1", "Tom", "2020-11-10", "hello 1", [5, 5, 2, 1]); //3.25
+prodForRating.addReview("2", "Neo", "2020-11-10", "hello 2", [2, 2, 2, 2]); // 2
+prodForRating.addReview("3", "Lena", "2020-10-10", "hello 3", [0, 0, 5, 1]); //1.5
+console.log(prodForRating);
+console.log(prodForRating.getAverageRating());
+prodForRating.deleteReview("3");
+prodForRating.getReviewById("1").forEach((element) => { console.log(element); })
+prodForRating.getReviewById().forEach((element) => { console.log(element); })
+console.log(prodForRating.getAverageRating());
+*/
+/*
+prodThree.setName('Mini dress');
+prodFour = new Product(4, "Maxi Dress");
+prodFive = new Product(5, "Other clothes", "Dresses are not included here");
+prodSix = new Product(6, "Other");
+prodSeven = new Product(7);
+
+let prodForSearch = [];
+prodForSearch.push(prodOne);
+prodForSearch.push(prodThree);
+prodForSearch.push(prodFour);
+prodForSearch.push(prodFive);
+prodForSearch.push(prodSix);
+prodForSearch.push(prodSeven);
+console.log("_________test for search___________")
+
+console.log(searchProducts(prodForSearch, "Dress"));
+searchProducts(prodForSearch, "Dress").forEach((element) => { console.log(element) });
+
+console.log("_________test for sort____________")
+sortProducts(prodForSearch, "name").forEach((element) => { console.log(element) });
+sortProducts(prodForSearch, "price").forEach((element) => { console.log(element) });
+sortProducts(prodForSearch, "id").forEach((element) => { console.log(element) });
+sortProducts(prodForSearch, " ").forEach((element) => { console.log(element) });
+*/
