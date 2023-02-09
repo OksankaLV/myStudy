@@ -1,0 +1,57 @@
+console.log("level 1.1 regExp");
+let Validator = {}
+
+Validator.validateEmail = function (email) {
+    const reg = /^[a-z][-\.\+a-z0-9]{1,19}@[a-z0-9\.!\$%\&'\*\+/=\?\^_-]{1,15}\.\w{1,5}$/gi;
+    return (email.match(reg) !== null);
+}
+
+// Test email
+console.log("Test email");
+console.log(Validator.validateEmail("fi@secondpart.end"));
+console.log(Validator.validateEmail("part@se=cond%p.art.end"));
+console.log(Validator.validateEmail("first.part@se=cond%part.r")+"\n");
+console.log(Validator.validateEmail("f@secondpart.end"));
+console.log(Validator.validateEmail("first-part@.se=cond@part.end"));
+console.log(Validator.validateEmail("-firstpart@.se=cond%.enddeded"));
+console.log(Validator.validateEmail("firs_tpart@.se.en"));
+console.log(Validator.validateEmail("firs_tpart@.se.enddeded")+"\n");
+
+
+Validator.validatePhone = function(phone) {
+    //const reg = /^(\+\d\d)?(\?\d{3}\)?\d{7}$)/;
+   const reg = /^(^\+\d\d)?\(?\d{3}\)?\d{7}$/g;
+    if (phone.length > 0 && phone.length < 25)
+    return (phone.replaceAll(" ","").replaceAll("-","").match(reg) !== null);
+}
+
+//Test phone
+
+console.log("Test phone");
+console.log(Validator.validatePhone("+18 (099) 567 89 01"));
+console.log(Validator.validatePhone("+28 099 5 6 7 8 9 01"));
+console.log(Validator.validatePhone("(39-9) 567-890-1"));
+console.log(Validator.validatePhone("-- (499) 567 890-1")+"\n");
+console.log(Validator.validatePhone("+58 (099) 567 8901 0"));
+console.log(Validator.validatePhone("+68 (099) a0000000"));
+console.log(Validator.validatePhone("+78 (0989) 567 8901"));
+console.log(Validator.validatePhone("+88 (0989) 567 8901")+"\n");
+
+
+Validator.validatePassword = function (password) { 
+    //const reg = /\w(?=[A-Z])(?=[a-z])(?=[0-9])\w{8,}/;
+    const reg = /(?=\w*[a-z])(?=\w*[A-Z])(?=\w*\d)\w{8,}/;
+    return (password.match(reg) !== null);
+}
+
+//Test validatePassword
+
+console.log("Test password");
+console.log(Validator.validatePassword("C00l_Pass"));
+console.log(Validator.validatePassword("SupperPas1"));
+console.log(Validator.validatePassword("SuperPassword_2"));
+console.log(Validator.validatePassword("3_superPasswordLavel")+"\n");
+console.log(Validator.validatePassword("Cool_pass"));
+console.log(Validator.validatePassword("C00l"));
+console.log(Validator.validatePassword("superPassword"));
+console.log(Validator.validatePassword("1_super_password"));
