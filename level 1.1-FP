@@ -1,0 +1,52 @@
+let str = `44.38, 34.33, Alushta, 31440,
+49.46, 30.17, Bila Tserkva, 200131,
+49.54, 28.49, Berdychiv, 87575, #no comment
+
+#
+46.49,36.58,#Berdyansk,121692,
+49.15, 28.41, Vinnytsia, 356665,
+#45.40,34.29,Dzhankoy,43343,
+,, Kyiv, 2967350,
+,,Kharkiv, 1443207,
+,, Kropyvnytskyi, 225339,
+,, Odesa, 1017699,
+,, Lutsk, 215317`
+
+let textOne = "Alushta is a city in Ukraine of republican subordination as part of the ARC." 
+let textTwo = "The largest cities of Ukraine: Kyiv, Kharkiv and Odesa." 
+let textTree = "My hometown is Kropyvnytskyi." 
+
+/**
+ * a function that accepts text in CSV format,
+ *  and returns a function that will accept any text as input and 
+ * replace the names of cities with information about the population and rating.
+ * @param {*} textSCV text in CSV format coordinates x, y, city name, population. May include spaces and comments
+ * @param {*} text text to transform
+ * @returns text with modified top 10 cities
+ */
+function arrayWithCsv(textSCV) {
+  
+    let res;
+    const reg = /^(#?\d\d.\d\d,){0,2}.*,#?\d*,/;
+    res = textSCV.split("\n")
+        .filter((elem) => elem.match(reg))
+        .map(function (elem) {
+            info = elem.replace("#", "").split(",")
+            return { x: info[0], y: info[1], name: info[2], population: info[3] };
+        })
+        .sort((a, b) => (b.population - a.population))
+        .slice(0, 10)
+        .reduce((obj, elem, index) => {
+            return { ...obj, [elem.name]: `{ population: ${elem.population}, rating: ${index + 1}}` }
+        }, {});
+    return (text) => {
+        Object.entries(res).forEach(([key, value]) => text = text.replace(key, `${key}: ${value}`));
+        return text
+     }   
+} 
+let dataCsv = arrayWithCsv(str);
+
+console.log(dataCsv(textOne));
+console.log(dataCsv(textTwo));
+console.log(dataCsv(textTree))
+
