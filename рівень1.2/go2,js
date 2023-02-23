@@ -34,7 +34,7 @@ function parseTcpStringAsHttpRequest(string) {
                  for(let i = 0; i <arrKey.length; i++) { arr.set(arrKey[i], arrValue[i]) }
                  return arr;
         }, 
-      body: (/(?<=\n\n).*$/).exec(string)/*"bookId=12345&author=Tan+Ah+Teck"*/, 
+      body: (/(?<=\n\n).*$/).exec(string), 
   }; 
 }
 
