@@ -26,15 +26,15 @@ let contents = readHttpLikeInput();
 // вот эту функцию собственно надо написать
 function parseTcpStringAsHttpRequest(string) { 
   return { 
-      method: string.match(/^\w*/)[0], 
-      uri : string.match(/(\/\w*)*.html/)[0], 
+      method: (/^\w*/).exec(string),
+      uri : (/(\/\w*)*.html/).exec(string),
       headers: ()=>{const arr = new Map();
                 let arrKey = string.match(/^[\w-]*(?=:)/mg);
                 let arrValue = string.match(/(?<=: ).*$/mg);
                  for(let i = 0; i <arrKey.length; i++) { arr.set(arrKey[i], arrValue[i]) }
                  return arr;
         }, 
-      body: string.match(/(?<=\n\n).*$/)[0]||""/*"bookId=12345&author=Tan+Ah+Teck"*/, 
+      body: (/(?<=\n\n).*$/).exec(string)/*"bookId=12345&author=Tan+Ah+Teck"*/, 
   }; 
 }
 
