@@ -59,7 +59,6 @@ function processHttpRequest($method, $uri, $headers, $body) {
     }
     // ... проанализировать входящие данные, вычислить результат
     // и специальной командой красиво вывести ответ
-    
     outputHttpResponse(statusCode, statusMessage, $headers, body);
 }
 
@@ -67,14 +66,14 @@ function parseTcpStringAsHttpRequest(string) {
     // ну это вы уже написали
   return { 
       method: (/^\w*/).exec(string),
-      uri : (/\/.*[/s/n]/).exec(string),
+      uri : (/\/[^\s]*/).exec(string),
       headers: ()=>{const arr = new Map();
                 let arrKey = string.match(/^[\w-]*(?=:)/mg);
                 let arrValue = string.match(/(?<=: ).*$/mg);
                  for(let i = 0; i <arrKey.length; i++) { arr.set(arrKey[i], arrValue[i]) }
                  return arr;
         }, 
-      body: (/(?<=\n\n).*$/).exec(string), 
+      body:(/(?<=\n\n).*$/mg).exec(string), 
   }; 
   
 }
@@ -82,4 +81,3 @@ function parseTcpStringAsHttpRequest(string) {
 http = parseTcpStringAsHttpRequest(contents);
 processHttpRequest(http.method, http.uri, http.headers, http.body);
 
-console.log(processHttpRequest(http.method, http.uri, http.headers, http.body))
