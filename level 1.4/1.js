@@ -361,7 +361,6 @@ function onScroll(){
             console.log(file)
             openFile(file)})
     })
-
     function styleForDrop(el){
         elemDragNDrop.classList.remove("styleForDragover");
         elemDragNDrop.classList.add("styleForDrop");
@@ -379,7 +378,7 @@ function onScroll(){
     function delStyleForDragover(el){
         elemDragNDrop.classList.remove("styleForDragover")
         el.stopPropagation();
-    }    
+    }     
    function openFile(file) {
     const img = document.createElement("img");
     img.src = URL.createObjectURL(file)
