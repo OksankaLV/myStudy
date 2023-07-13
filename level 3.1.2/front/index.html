@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <button id="plus" onclick="funcAction('Plus')">
+            +
+        </button>
+        <button id="minus" onclick="funcAction('Minus')">
+            -
+        </button>
+        <div>
+            Кнопку + було нажато <span id="resultPlus"></span> разів
+        </div>
+        <div>
+            Кнопку - було нажато <span id="resultMinus"></span> разів
+        </div>
+    </div>
+    <script>
+       
+
+
+
+
+        const apiURL = 'http://localhost:3005/';
+        function funcAction(action){
+                        const request = JSON.stringify({param: action});
+                        fetch(apiURL+action, {
+                        method: 'POST',
+                        body: request,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                        }).then(res=>res.json()).then(res=>{
+                            if (action=='Plus'){
+                            let text = document.getElementById("resultPlus");
+                                return text.innerHTML = ` ${res.res} `}
+                            else{
+                            let text = document.getElementById("resultMinus");
+                                return text.innerHTML = ` ${res.res} ` 
+                            }
+                        })
+        }; 
+    
+    </script>
+</body>
+</html>
